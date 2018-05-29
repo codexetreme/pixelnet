@@ -1,11 +1,8 @@
-import torch
-
-from PIL import Image
-import skimage
-import torch.utils.data as datautil
-from scipy.ndimage import io
-from torchvision import transforms
 import os
+
+import torch
+import torch.utils.data as datautil
+from PIL import Image
 
 
 def make_dataset(path):
@@ -31,7 +28,7 @@ def make_dataset(path):
 
 
 # make_dataset(r"C:\Users\Admin\AppData\Local\lxss\home\codexetreme\Lung_CXR\train")
-
+# addon = '/CXR_png/MCUCXR_0001_0.png'
 
 class CustomDataset(datautil.Dataset):
 
@@ -50,17 +47,18 @@ class CustomDataset(datautil.Dataset):
         # label_left = torch.Tensor(label_left)
 
         image = self.data[index]
-        image = Image.open(image)
+        image = Image.open(image).convert('RGB')
         # image = torch.Tensor(image)
         # print(image.size())
         if self.transforms is not None:
             image = self.transforms(image)
             label_left = self.transforms(label_left)
-
+            label_right = self.transforms(label_right)
             label_left.unsqueeze_(0)
             label_right.unsqueeze_(0)
 
             label_left.add_(label_right)
+            label_left = torch.Tensor(label_left).long()
 
         return image, label_left
 

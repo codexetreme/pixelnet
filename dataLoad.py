@@ -54,8 +54,8 @@ class CustomDataset(datautil.Dataset):
             image = self.transforms(image)
             label_left = self.transforms(label_left)
             label_right = self.transforms(label_right)
-            # label_left.unsqueeze_(0)
-            # label_right.unsqueeze_(0)
+            label_left.unsqueeze_(0)
+            label_right.unsqueeze_(0)
 
             label_left.add_(label_right)
             label_left = torch.Tensor(label_left).long()
